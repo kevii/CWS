@@ -1,0 +1,18 @@
+1	中国	中国	中国	NR	NR	_	_	3	3	NMOD	NMOD	_	_	_
+2	进出口	进出口	进出口	NN	NN	_	_	3	3	NMOD	NMOD	_	_	_
+3	银行	银行	银行	NN	NN	_	_	7	7	SBJ	SBJ	_	_	A0
+4	与	与	与	CC	P	_	_	3	3	CJTN	CJTN	_	_	_
+5	中国	中国	中国	NR	NR	_	_	6	6	NMOD	NMOD	_	_	_
+6	银行	银行	银行	NN	NN	_	_	4	4	CJT	CJT	_	_	_
+7	加强	加强	加强	VV	VV	_	_	0	0	ROOT	ROOT	Y	加强.01	_
+8	合作	合作	合作	NN	NN	_	_	7	7	COMP	COMP	_	_	A1
+
+1	新华社	新华社	新华社	NN	NR	_	_	8	8	UNK	UNK	_	_
+2	北京	北京	北京	NR	NR	_	_	8	8	UNK	UNK	_	_
+3	十二月	十二月	十二月	NT	NT	_	_	8	8	UNK	UNK	_	_
+4	二十六日	二十六日	二十六日	NT	NT	_	_	8	8	UNK	UNK	_	_
+5	电	电	电	NN	NN	_	_	8	8	UNK	UNK	_	_
+6	（	（	（	PU	PU	_	_	8	8	UNK	UNK	_	_
+7	记者	记者	记者	NN	NN	_	_	8	8	UNK	UNK	_	_
+8	周根良	周根良	周根良	NR	NR	_	_	0	0	ROOT	ROOT	_	_
+9	）	）	）	PU	PU	_	_	8	8	UNK	UNK	_	_
