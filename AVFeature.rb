@@ -179,8 +179,8 @@ class AVFeature
   end
 end
 
- f = AVFeature.new("xin_cmn")
- f.process("毛泽东")
+# f = AVFeature.new("xin_cmn")
+# f.process("毛泽东")
 # f.search_3("新加坡", "corpus/xin_cmn_p/xin_cmn_199101_1")
 
 

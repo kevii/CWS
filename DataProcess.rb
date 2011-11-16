@@ -13,13 +13,17 @@ class DataProcess
           temp = ""
         elsif
           temp += line[0]
-          if(temp.length == l)
-            if(av[temp] == nil)
-              av[temp] = af.process(temp)
+          puts "uni, bi: #{temp[2]}, #{temp[1..2]}, #{temp[0..2]}"
+	  ((l - 1)..0).each do |i|
+	    
+#          if(temp.length == l)
+            if(av[temp[i..(l - 1)]] == nil)
+              av[temp[i..(l - 1)]] = af.process(temp)
             elsif
-              puts "Existed pattern:#{temp}: av#{av[temp]}"
+              puts "Existed pattern:#{temp}: av#{av[temp[i..(l - 1)]]}"
               i += 1
             end
+#	    puts temp
             temp = temp[1..(l-1)]
           end
         end
