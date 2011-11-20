@@ -11,7 +11,7 @@ class AVFeature
   def process(pattern)
     lav = Hash.new(0)
     rav = Hash.new(0)
-    stamp = Time.now
+#    stamp = Time.now
     (1991..2004).each do |i|
       (1..12).each do |j|
         corpus = ""
@@ -32,8 +32,8 @@ class AVFeature
 #        puts "#{corpus} completed..\n"
       end
     end
-    puts "time: #{Time.now - stamp}s"
-    puts "pattern: #{pattern}: lav = #{lav.count} , rav = #{rav.count}"
+#    puts "time: #{Time.now - stamp}s"
+    puts "pattern: #{pattern}: av[#{lav.count}, #{rav.count}]"
     return [lav.count, rav.count]
   end
   
@@ -55,6 +55,10 @@ class AVFeature
               if(flag && flag != 0 && flag < (line.length - pattern.length))
                 lav[line[flag - 1]] += 1
                 rav[line[flag + pattern.length]] += 1
+              elsif(flag && flag == 0)
+                rav[line[flag + pattern.length]] += 1
+              elsif(flag && flag == (line.length - pattern.length))
+                lav[line[flag - 1]] += 1
               end
               avArray
             end
@@ -64,7 +68,7 @@ class AVFeature
       end
     end
     puts "time: #{Time.now - stamp}s"
-    puts "pattern: #{pattern}: lav = #{lav.count} , rav = #{rav.count}"
+    puts "pattern: #{format("% 5s", pattern)}: lav = #{lav.count} , rav = #{rav.count}"
     return [lav.count, rav.count]
   end
   

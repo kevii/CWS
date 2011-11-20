@@ -2,3 +2,5 @@
 *.pyc
 *.pyo
 corpus
+nohup.out
+train-4tag-r.txt
