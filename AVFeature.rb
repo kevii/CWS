@@ -9,9 +9,9 @@ class AVFeature
   end
   
   def process(pattern)
-    lav = Hash.new(0)
-    rav = Hash.new(0)
-#    stamp = Time.now
+    av = [Hash.new(0), Hash.new(0)]
+    stamp = Time.now
+#    threads = []
     (1991..2004).each do |i|
       (1..12).each do |j|
         corpus = ""
@@ -20,21 +20,29 @@ class AVFeature
         else
           corpus = "corpus/#{@newswire}_2/#{@newswire}_#{i}#{j}_2"
         end
+#        threads << Thread.new(corpus) do |t|
         File.open(corpus, "r:UTF-8") do |file|
           file.each_line do |line|
             flag = line.index(pattern)
             if(flag && flag != 0 && flag < (line.length - pattern.length))
-              lav[line[flag - 1]] += 1
-              rav[line[flag + pattern.length]] += 1
+              av[0][line[flag - 1]] += 1
+              av[1][line[flag + pattern.length]] += 1
+            elsif(flag && flag == 0)
+              av[1][line[flag + pattern.length]] += 1
+            elsif(flag && flag == (line.length - pattern.length))
+              av[0][line[flag - 1]] += 1
             end
           end
         end
-#        puts "#{corpus} completed..\n"
+#        end
       end
     end
-#    puts "time: #{Time.now - stamp}s"
-    puts "pattern: #{pattern}: av[#{lav.count}, #{rav.count}]"
-    return [lav.count, rav.count]
+#    threads.each {|thr| thr.join} 
+    puts "time: #{Time.now - stamp}s"
+#    puts "pattern: #{pattern}: av[#{av[0].count}, #{av[1].count}]"
+    avc = [av[0].count, av[1].count]
+    yield avc
+    return avc
   end
   
   def process_2(patterns)
@@ -184,7 +192,7 @@ class AVFeature
 end
 
 # f = AVFeature.new("xin_cmn")
-# f.process("毛泽东")
+# f.process(",")
 # f.search_3("新加坡", "corpus/xin_cmn_p/xin_cmn_199101_1")
 
 

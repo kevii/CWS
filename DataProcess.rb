@@ -23,13 +23,13 @@ class DataProcess
           (1..l).each do |i|
             if(temp.length == i)
               (0..i-1).each do |j|
-                if(av[temp[i-1-j..i - 1]] == nil)
+                if(av[temp[i-1-j..i-1]] == nil)
                   # puts i
-                  av[temp[i-1-j..i - 1]] = af.process(temp[i-1-j..i - 1])  
+                  av[temp[i-1-j..i-1]] = af.process(temp[i-1-j..i-1]){|ac| puts "New pattern:#{temp[i-1-j..i-1]}: #{ac}"}
                 elsif
-                  puts "Existed pattern:#{temp[i-1-j..i- 1]}: av#{av[temp[i-1-j..i - 1]]}"
+                  puts "Existed pattern:#{temp[i-1-j..i-1]}: av#{av[temp[i-1-j..i-1]]}"
                 end
-                outputline += "#{format("% 6d", av[temp[i-1-j..i - 1]][0])} #{format("% 6d", av[temp[i-1-j..i - 1]][1])} " 
+                outputline += "#{format("% 6d", av[temp[i-1-j..i-1]][0])} #{format("% 6d", av[temp[i-1-j..i-1]][1])} " 
               end
               if(i == l)
                 temp = temp[1..i-1]
@@ -49,6 +49,6 @@ class DataProcess
 end
 
 p = DataProcess.new
-p.process("train-4tag.txt", 3)
+p.process("train-4tag.txt", 2)
 
 
