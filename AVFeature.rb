@@ -4,8 +4,8 @@ class AVFeature
   
   attr_reader :newswire
   
-  def initialize(newswire)
-    @newswire = newswire
+  def initialize
+    @newswire = "xin_cmn"
   end
   
   def process(pattern)
@@ -14,23 +14,24 @@ class AVFeature
 #    threads = []
     (1991..2004).each do |i|
       (1..12).each do |j|
-        corpus = ""
-        if j < 10
-          corpus = "corpus/#{@newswire}_2/#{@newswire}_#{i}0#{j}_2"
-        else
-          corpus = "corpus/#{@newswire}_2/#{@newswire}_#{i}#{j}_2"
-        end
+	      corpus = "corpus/#{@newswire}_2/#{@newswire}_#{i}#{format("%02d", j)}_2"
 #        threads << Thread.new(corpus) do |t|
         File.open(corpus, "r:UTF-8") do |file|
           file.each_line do |line|
-            flag = line.index(pattern)
-            if(flag && flag != 0 && flag < (line.length - pattern.length))
-              av[0][line[flag - 1]] += 1
-              av[1][line[flag + pattern.length]] += 1
-            elsif(flag && flag == 0)
-              av[1][line[flag + pattern.length]] += 1
-            elsif(flag && flag == (line.length - pattern.length))
-              av[0][line[flag - 1]] += 1
+            offset = 0
+            while line.index(pattern,offset)
+              pos = line.index(pattern, offset)
+              if(pos && (line.length - pattern.length) != 0)
+		            if(pos != 0 && pos < (line.length - pattern.length))
+                  av[0][line[pos - 1]] += 1
+                  av[1][line[pos + pattern.length]] += 1
+                elsif(pos == 0)
+                  av[1][line[pos + pattern.length]] += 1
+                elsif(pos == (line.length - pattern.length))
+                  av[0][line[pos - 1]] += 1
+                end
+                offset = pos + 1
+              end
             end
           end
         end
@@ -41,43 +42,40 @@ class AVFeature
     puts "time: #{Time.now - stamp}s"
 #    puts "pattern: #{pattern}: av[#{av[0].count}, #{av[1].count}]"
     avc = [av[0].count, av[1].count]
-    yield avc
+    puts avc
+#   yield avc
     return avc
   end
   
-  def process_2(patterns)
-    avArray = Hash.new
+  def process2(prray)
+    map = Array.new([Hash.new(0),Hash.new(0)])
     stamp = Time.now
     (1991..2004).each do |i|
       (1..12).each do |j|
-        corpus = ""
-        if j < 10
-          corpus = "corpus/#{@newswire}_2/#{@newswire}_#{i}0#{j}_2"
-        else
-          corpus = "corpus/#{@newswire}_2/#{@newswire}_#{i}#{j}_2"
-        end
+        corpus = "corpus/#{@newswire}_2/#{@newswire}_#{i}#{format("%02d", j)}_2"
         File.open(corpus, "r:UTF-8") do |file|
           file.each_line do |line|
-            patterns.each do |pattern|
+            (0..prray.length-1).each do |index|
+              pattern = prray[index]
+	      puts pattern
               flag = line.index(pattern)
               if(flag && flag != 0 && flag < (line.length - pattern.length))
-                lav[line[flag - 1]] += 1
-                rav[line[flag + pattern.length]] += 1
-              elsif(flag && flag == 0)
-                rav[line[flag + pattern.length]] += 1
-              elsif(flag && flag == (line.length - pattern.length))
-                lav[line[flag - 1]] += 1
+                map[index][0][line[flag - 1]] += 1
+                map[index][1][line[flag + pattern.length]] += 1
+              elsif(flag && flag == 0 && flag != (line.length - pattern.length))
+                map[index][1][line[flag + pattern.length]] += 1
+              elsif(flag && flag == (line.length - pattern.length) && flag != 0)
+                map[index][0][line[flag - 1]] += 1
               end
-              avArray
             end
           end
         end
-#        puts "#{corpus} completed..\n"
       end
     end
+    (0..prray.length-1).each do |index|
+      puts "pattern: #{prray[index]} -- #{map[index][0].count}/#{map[index][1].count}"
+    end
     puts "time: #{Time.now - stamp}s"
-    puts "pattern: #{format("% 5s", pattern)}: lav = #{lav.count} , rav = #{rav.count}"
-    return [lav.count, rav.count]
   end
   
   #ordinary search algorithm
@@ -189,10 +187,14 @@ class AVFeature
       @rav[text[flag + pattern.length]] += 1
     end
   end
+  
+  
 end
 
-# f = AVFeature.new("xin_cmn")
-# f.process(",")
+ f = AVFeature.new
+ f.process("中国进") 
+  
 # f.search_3("新加坡", "corpus/xin_cmn_p/xin_cmn_199101_1")
 
-
+# patternList = ["中","国","中国","进","国进","出","进出"]
+# f.process2(patternList)
