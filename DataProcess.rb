@@ -3,24 +3,26 @@ require './AVFeature.rb'
 
 class DataProcess
 
-  def process(corpus, l)
+  def process(input, output, corpus, window)
     stamp = Time.now
     av = Hash.new()
-    af = AVFeature.new("xin_cmn")
-    File.open("train-4tag-r.txt", "w:UTF-8") do |fileo|
-    File.open(corpus, "r:UTF-8") do |file|
+    af = AVFeature.new(corpus)
+    File.open(output, "w:UTF-8") do |fileo|
+    File.open(input, "r:UTF-8") do |file|
       temp = ""
       file.each_line.with_index do |line, index|
         puts index
-        if(line[0] == "\n") 
-          temp = ""
-          fileo.puts 
+        current_token = line.split[0]
+        current_tag = line.split[1]
+        if(current_token == "\n")
+          temp = []
+          fileo.puts
         elsif
-          temp += line[0]
-	        outputline = "#{line[0]} "
+          temp.push current_token
+	        outputline = "#{current_token} "
 #          puts temp.length
 #          puts "uni, bi: #{temp[2]}, #{temp[1..2]}, #{temp[0..2]}"
-          (1..l).each do |i|
+          (1..window).each do |i|
             if(temp.length == i)
               (0..i-1).each do |j|
                 if(av[temp[i-1-j..i-1]] == nil)
@@ -29,14 +31,14 @@ class DataProcess
                 elsif
                   puts "Existed pattern:#{temp[i-1-j..i-1]}: av#{av[temp[i-1-j..i-1]]}"
                 end
-                outputline += "#{format("% 6d", av[temp[i-1-j..i-1]][0])} #{format("% 6d", av[temp[i-1-j..i-1]][1])} " 
+                outputline += "#{format("% 6d", av[temp[i-1-j..i-1]][0])} #{format("% 6d", av[temp[i-1-j..i-1]][1])} "
               end
-              if(i == l)
-                temp = temp[1..i-1]
+              if(i == window)
+                temp = temp.shift
               end
             end
           end
-          outputline += "#{format("% 6s",line.split[1])}"
+          outputline << "#{format("% 6s",current_tag)}"
           fileo.puts outputline
         end
         # puts "line: #{index}"
@@ -49,6 +51,5 @@ class DataProcess
 end
 
 p = DataProcess.new
-p.process("train-4tag.txt", 2)
-
+p.process("train-4tag.txt", "train-4tag-with-GI.txt","xin_cmn", 2)
 

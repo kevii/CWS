@@ -1,13 +1,13 @@
 # encoding: utf-8
 
 class AVFeature
-  
+
   attr_reader :newswire
-  
-  def initialize
-    @newswire = "xin_cmn"
+
+  def initialize corpus
+    @newswire = corpus
   end
-  
+
   def process(pattern)
     av = [Hash.new(0), Hash.new(0)]
     stamp = Time.now
@@ -38,7 +38,7 @@ class AVFeature
 #        end
       end
     end
-#    threads.each {|thr| thr.join} 
+#    threads.each {|thr| thr.join}
     puts "time: #{Time.now - stamp}s"
 #    puts "pattern: #{pattern}: av[#{av[0].count}, #{av[1].count}]"
     avc = [av[0].count, av[1].count]
@@ -46,7 +46,7 @@ class AVFeature
 #   yield avc
     return avc
   end
-  
+
   def process2(prray)
     map = Array.new([Hash.new(0),Hash.new(0)])
     stamp = Time.now
@@ -77,10 +77,10 @@ class AVFeature
     end
     puts "time: #{Time.now - stamp}s"
   end
-  
+
   #ordinary search algorithm
   def search(pattern, corpus)
-    
+
     File.open(corpus, "r:UTF-8") do |file|
       offset = 0
       file.each_line do |line|
@@ -89,7 +89,7 @@ class AVFeature
         flag = offset
         (0..(line.length - 2)).each do |i|
           puts "#{line[i]} - #{pattern[offset]}"
-          
+
           if(pattern[offset] == line[i])
             found = true
             offset += 1
@@ -123,7 +123,7 @@ class AVFeature
       end
     end
   end
-  
+
   def search_2(pattern, corpus)
     stamp = Time.now
     File.open(corpus, "r:UTF-8") do |file|
@@ -136,13 +136,13 @@ class AVFeature
             result = searchText(pattern, text)
             text = ""
           end
-        end  
+        end
         # searchText(pattern, line)
       end
     end
     puts "Time consume: #{Time.now - stamp}s"
   end
-  
+
   def searchText(pattern, text)
     (0..(text.length - pattern.length)).each do |i|
       if(pattern[0] == text[i])
@@ -162,7 +162,7 @@ class AVFeature
       end
     end
   end
-  
+
   def search_3(pattern, corpus)
 #    stamp = Time.now
     File.open(corpus, "r:UTF-8") do |file|
@@ -177,7 +177,7 @@ class AVFeature
     end
 #    puts "Time consume: #{Time.now - stamp}s"
   end
-  
+
   def searchText_2(pattern, text)
 #    puts "#{pattern} : #{text}"
 #    puts ""
@@ -187,14 +187,15 @@ class AVFeature
       @rav[text[flag + pattern.length]] += 1
     end
   end
-  
-  
+
+
 end
 
- f = AVFeature.new
- f.process("中国进") 
-  
+ f = AVFeature.new "xin_cmn"
+ f.process("中国进")
+
 # f.search_3("新加坡", "corpus/xin_cmn_p/xin_cmn_199101_1")
 
 # patternList = ["中","国","中国","进","国进","出","进出"]
 # f.process2(patternList)
+

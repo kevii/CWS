@@ -1,0 +1,5 @@
+crf_learn -f 3 -c 4.0 -p 2
+Accuracy: 0.9491380788353934
+
+crf_learn -a CRF-L1 -f 3 -c 4.0 -p 2
+Accuracy: 0.9303644071759223
